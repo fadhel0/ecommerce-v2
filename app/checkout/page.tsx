@@ -1,23 +1,23 @@
-'use client';
+"use client";
 
-import CheckoutItem from '../components/CheckoutItem';
-import MainLayout from '../layouts/MainLayout';
-import Link from 'next/link';
-import { useUser } from '@/app/context/user';
-import { useCart } from '../context/cart';
-import { useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
-import { useRouter } from 'next/navigation';
-import { AiOutlineLoading3Quarters } from 'react-icons/ai';
-import ClientOnly from '../components/ClientOnly';
+import CheckoutItem from "../components/CheckoutItem";
+import MainLayout from "../layouts/MainLayout";
+import Link from "next/link";
+import { useUser } from "@/app/context/user";
+import { useCart } from "../context/cart";
+import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import ClientOnly from "../components/ClientOnly";
 import {
   loadStripe,
   Stripe,
   StripeElements,
   StripeCardElement,
-} from '@stripe/stripe-js';
-import UseIsLoading from '../hooks/useIsLoading';
-import UseUserAddress from '../hooks/useUserAddress';
+} from "@stripe/stripe-js";
+import UseIsLoading from "../hooks/useIsLoading";
+import UseUserAddress from "../hooks/useUserAddress";
 
 export default function Checkout() {
   const user = useUser();
@@ -34,8 +34,8 @@ export default function Checkout() {
 
   useEffect(() => {
     if (cart?.cartTotal() <= 0) {
-      toast.error('Your cart is empty!', { autoClose: 3000 });
-      return router.push('/');
+      toast.error("Your cart is empty!", { autoClose: 3000 });
+      return router.push("/");
     }
 
     UseIsLoading(true);
@@ -58,11 +58,11 @@ export default function Checkout() {
 
   const stripeInit = async () => {
     stripe.current = await loadStripe(
-      process.env.NEXT_PUBLIC_STRIPE_PK_KEY || ''
+      process.env.NEXT_PUBLIC_STRIPE_PK_KEY || ""
     );
 
-    const response = await fetch('/api/stripe', {
-      method: 'POST',
+    const response = await fetch("/api/stripe", {
+      method: "POST",
       body: JSON.stringify({ amount: cart.cartTotal() }),
     });
     const result = await response.json();
@@ -70,25 +70,25 @@ export default function Checkout() {
     clientSecret.current = result.client_secret;
     elements.current = stripe.current?.elements()!;
     var style = {
-      base: { fontSize: '18px' },
+      base: { fontSize: "18px" },
       invalid: {
-        fontFamily: 'Arial, sans-serif',
-        color: '#EE4B2B',
-        iconColor: '#EE4B2B',
+        fontFamily: "Arial, sans-serif",
+        color: "#EE4B2B",
+        iconColor: "#EE4B2B",
       },
     };
-    card.current = elements.current?.create('card', {
+    card.current = elements.current?.create("card", {
       hidePostalCode: true,
       style: style,
     });
 
-    card.current?.mount('#card-element');
+    card.current?.mount("#card-element");
 
-    card.current?.on('change', function (event: any) {
-      document.querySelector('button')!.disabled = event.empty;
-      document.querySelector('#card-error')!.textContent = event.error
+    card.current?.on("change", function (event: any) {
+      document.querySelector("button")!.disabled = event.empty;
+      document.querySelector("#card-error")!.textContent = event.error
         ? event.error.message
-        : '';
+        : "";
     });
 
     UseIsLoading(false);
@@ -98,7 +98,7 @@ export default function Checkout() {
     event.preventDefault();
 
     if (Object.keys(addressDetails).length === 0) {
-      showError('Please add shipping address!');
+      showError("Please add shipping address!");
       return;
     }
 
@@ -115,8 +115,8 @@ export default function Checkout() {
       UseIsLoading(true);
 
       try {
-        let response = await fetch('/api/orders/create', {
-          method: 'POST',
+        let response = await fetch("/api/orders/create", {
+          method: "POST",
           body: JSON.stringify({
             stripe_id: result?.paymentIntent.id,
             name: addressDetails.name,
@@ -130,13 +130,13 @@ export default function Checkout() {
         });
 
         if (response.status === 200) {
-          toast.success('Order Complete!', { autoClose: 3000 });
+          toast.success("Order Complete!", { autoClose: 3000 });
           cart.clearCart();
-          return router.push('/success');
+          return router.push("/success");
         }
       } catch (error) {
         console.log(error);
-        toast.error('Something went wrong?', { autoClose: 3000 });
+        toast.error("Something went wrong?", { autoClose: 3000 });
       }
 
       UseIsLoading(false);
@@ -144,11 +144,11 @@ export default function Checkout() {
   };
 
   const showError = (errorMsgText: string) => {
-    let errorMsg = document.querySelector('#card-error');
+    let errorMsg = document.querySelector("#card-error");
     toast.error(errorMsgText, { autoClose: 3000 });
     errorMsg!.textContent = errorMsgText;
     setTimeout(() => {
-      errorMsg!.textContent = '';
+      errorMsg!.textContent = "";
     }, 3000);
   };
 
@@ -171,7 +171,7 @@ export default function Checkout() {
                       href="/address"
                       className="text-blue-500 text-sm underline"
                     >
-                      {addressDetails.name ? 'Update Address' : 'Add Address'}
+                      {addressDetails.name ? "Update Address" : "Add Address"}
                     </Link>
                   ) : null}
 
@@ -213,7 +213,7 @@ export default function Checkout() {
                 <div className="p-4">
                   <div className="flex items-baseline justify-between text-sm mb-1">
                     <div>Items ({cart.getCart().length})</div>
-                    <div>£{(cart.cartTotal() / 100).toFixed(2)}</div>
+                    <div>${(cart.cartTotal() / 100).toFixed(2)}</div>
                   </div>
                   <div className="flex items-center justify-between mb-4 text-sm">
                     <div>Shipping:</div>
@@ -225,7 +225,7 @@ export default function Checkout() {
                   <div className="flex items-center justify-between my-4">
                     <div className="font-semibold">Order total</div>
                     <div className="text-2xl font-semibold">
-                      £{(cart.cartTotal() / 100).toFixed(2)}
+                      ${(cart.cartTotal() / 100).toFixed(2)}
                     </div>
                   </div>
 

@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
 export default function CheckoutItem({ product }: any) {
   const pathname = usePathname();
@@ -10,7 +10,7 @@ export default function CheckoutItem({ product }: any) {
       <div className="flex justify-start rounded-lg mb-2 border p-4">
         <img
           className="rounded-md w-40 h-40"
-          src={product.url + '/150'}
+          src={product.url + "/150"}
           alt="product"
         />
 
@@ -25,7 +25,7 @@ export default function CheckoutItem({ product }: any) {
 
           <div className="relative flex items-center text-sm text-gray-500">
             <div className="line-through">
-              £{((product.price * 1.2) / 100).toFixed(2)}
+              ${((product.price * 1.2) / 100).toFixed(2)}
             </div>
             <div className="px-2">-</div>
             <div className="">20% OFF</div>
@@ -35,7 +35,7 @@ export default function CheckoutItem({ product }: any) {
             {product.description.substring(0, 130)}...
           </div>
 
-          {pathname == '/cart' ? (
+          {pathname == "/cart" ? (
             <div className="text-sm mt-2 w-full flex justify-end underline text-blue-500 cursor-pointer">
               Remove
             </div>

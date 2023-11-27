@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { debounce } from 'debounce';
-import Link from 'next/link';
-import { useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { BiLoaderCircle } from 'react-icons/bi';
-import React, { ChangeEvent } from 'react';
+import { debounce } from "debounce";
+import Link from "next/link";
+import { useState } from "react";
+import { AiOutlineSearch } from "react-icons/ai";
+import { BiLoaderCircle } from "react-icons/bi";
+import React, { ChangeEvent } from "react";
 
 export default function MainLayout() {
   const [items, setItems] = useState<
@@ -18,7 +18,7 @@ export default function MainLayout() {
     async (event: ChangeEvent<HTMLInputElement>) => {
       const searchTerm = event.target.value.trim(); // Trim leading/trailing spaces
 
-      if (searchTerm === '') {
+      if (searchTerm === "") {
         setItems([]);
         return;
       }
@@ -38,7 +38,7 @@ export default function MainLayout() {
         }
       } catch (error) {
         console.error(error);
-        alert('An error occurred while searching.');
+        alert("An error occurred while searching.");
       } finally {
         setIsSearching(false);
       }
@@ -96,7 +96,7 @@ export default function MainLayout() {
                                   <img
                                     className="rounded-md"
                                     width="40"
-                                    src={item?.url + '/40'}
+                                    src={item?.url + "/40"}
                                     alt="Product"
                                   />
                                   <div className="truncate ml-2">
@@ -104,7 +104,7 @@ export default function MainLayout() {
                                   </div>
                                 </div>
                                 <div className="truncate">
-                                  £{(item?.price / 100).toFixed(2)}
+                                  ${(item?.price / 100).toFixed(2)}
                                 </div>
                               </Link>
                             </div>
