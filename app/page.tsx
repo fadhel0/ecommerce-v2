@@ -15,9 +15,6 @@ type ProductType = {
   price: number;
 };
 
-export const dynamic = "force-static";
-export const dynamicParams = true;
-
 export default function Home() {
   const [products, setProducts] = useState<ProductType[]>([]); // Specify the type here
 
